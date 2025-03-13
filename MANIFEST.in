@@ -1,6 +1,0 @@
-include README.md
-include requirements.txt
-recursive-include templates *.html
-recursive-include debian *
-include scanner.py
-include web_app.py 
