@@ -1,0 +1,3 @@
+scanner.py usr/lib/docker-vulnerability-scanner/
+web_app.py usr/lib/docker-vulnerability-scanner/
+templates/* usr/lib/docker-vulnerability-scanner/templates/ 

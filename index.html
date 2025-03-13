@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %}Docker Security Scanner - Главная{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <div class="card">
+            <div class="card-header">
+                <h2>Сканер уязвимостей Docker контейнеров</h2>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Подключение к Docker хосту</h5>
+                <form method="GET" action="{{ url_for('list_containers') }}" class="mt-4">
+                    {{ form.csrf_token }}
+                    <div class="mb-3">
+                        {{ form.host.label(class="form-label") }}
+                        {{ form.host(class="form-control") }}
+                        <div class="form-text">{{ form.host.description }}</div>
+                    </div>
+                    <div id="connection-status"></div>
+                    {{ form.submit(class="btn btn-primary mt-3") }}
+                </form>
+            </div>
+        </div>
+
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5>Возможности сканера</h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-group">
+                    <li class="list-group-item">✓ Сканирование локальных и удаленных контейнеров</li>
+                    <li class="list-group-item">✓ Проверка уязвимостей в режиме реального времени</li>
+                    <li class="list-group-item">✓ Подробные отчеты о найденных уязвимостях</li>
+                    <li class="list-group-item">✓ Поддержка Астра Линукс 1.7.6</li>
+                    <li class="list-group-item">✓ Интеграция с Trivy</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.getElementById('host').addEventListener('change', function() {
+    const hostUrl = this.value;
+    const statusDiv = document.getElementById('connection-status');
+    
+    statusDiv.innerHTML = '<div class="alert alert-info">Проверка подключения...</div>';
+    
+    fetch('/check_host', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: 'host=' + encodeURIComponent(hostUrl)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            statusDiv.innerHTML = '<div class="alert alert-success">Подключение успешно</div>';
+        } else {
+            statusDiv.innerHTML = '<div class="alert alert-danger">Ошибка подключения: ' + data.message + '</div>';
+        }
+    })
+    .catch(error => {
+        statusDiv.innerHTML = '<div class="alert alert-danger">Ошибка при проверке подключения</div>';
+    });
+});
+</script>
+{% endblock %} 

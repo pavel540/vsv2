@@ -1,0 +1,15 @@
+#!/usr/bin/make -f
+
+export PYBUILD_NAME=docker-vulnerability-scanner
+
+%:
+	dh $@ --with python3 --buildsystem=pybuild
+
+override_dh_auto_install:
+	dh_auto_install
+	# Install systemd service
+	mkdir -p debian/docker-vulnerability-scanner/lib/systemd/system/
+	cp debian/docker-vulnerability-scanner.service debian/docker-vulnerability-scanner/lib/systemd/system/
+
+override_dh_installinit:
+	dh_installinit --name=docker-vulnerability-scanner 

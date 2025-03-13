@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %}Docker Security Scanner - Результаты сканирования{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h3>Результаты сканирования контейнера</h3>
+            </div>
+            <div class="card-body">
+                <div class="container-info mb-4">
+                    <h4>Информация о контейнере</h4>
+                    <table class="table table-bordered">
+                        <tr>
+                            <th style="width: 200px;">ID контейнера</th>
+                            <td>{{ container_id }}</td>
+                        </tr>
+                        <tr>
+                            <th>Имя контейнера</th>
+                            <td>{{ container_name }}</td>
+                        </tr>
+                        <tr>
+                            <th>Образ</th>
+                            <td>{{ image }}</td>
+                        </tr>
+                        <tr>
+                            <th>Время сканирования</th>
+                            <td>{{ scan_time }}</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="vulnerabilities mt-4">
+                    <h4>Найденные уязвимости</h4>
+                    {% if results %}
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>ID уязвимости</th>
+                                        <th>Серьезность</th>
+                                        <th>Описание</th>
+                                        <th>Исправлено в версии</th>
+                                        <th>CVSS Score</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for vuln in results %}
+                                    <tr class="severity-{{ vuln.severity|lower }}">
+                                        <td>{{ vuln.id }}</td>
+                                        <td>
+                                            <span class="badge {% if vuln.severity == 'CRITICAL' %}bg-danger
+                                                              {% elif vuln.severity == 'HIGH' %}bg-warning
+                                                              {% elif vuln.severity == 'MEDIUM' %}bg-info
+                                                              {% else %}bg-secondary{% endif %}">
+                                                {{ vuln.severity }}
+                                            </span>
+                                        </td>
+                                        <td>{{ vuln.description }}</td>
+                                        <td>{{ vuln.fixed_version }}</td>
+                                        <td>{{ vuln.cvss_score }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-success">
+                            Уязвимостей не обнаружено
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="mt-4">
+                    <a href="{{ url_for('list_containers') }}" class="btn btn-secondary">
+                        Вернуться к списку контейнеров
+                    </a>
+                    <button class="btn btn-primary" onclick="window.print()">
+                        Сохранить отчет
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    @media print {
+        .navbar, .btn { display: none; }
+        .card { border: none; }
+        .container { width: 100%; max-width: 100%; }
+    }
+    .severity-critical td { background-color: #ffebee; }
+    .severity-high td { background-color: #fff3e0; }
+    .severity-medium td { background-color: #f1f8e9; }
+    .severity-low td { background-color: #f5f5f5; }
+</style>
+{% endblock %} 

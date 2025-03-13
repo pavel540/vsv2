@@ -1,0 +1,50 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
+venv/
+ENV/
+env/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Debian package building
+debian/.debhelper/
+debian/docker-vulnerability-scanner/
+debian/files
+debian/*.substvars
+debian/*.log
+debian/debhelper-build-stamp
+
+# Local development
+*.log
+.env
+.coverage
+htmlcov/
+
+# System
+.DS_Store
+Thumbs.db 
